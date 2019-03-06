@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">سامانه تیک دانشجویی(غیر رسمی)</string>
+    <string name="name">نام درس</string>
+    <string name="all_absents">تمام غیبت ها</string>
+    <string name="status">وضعیت</string>
+    <string name="details">جزئیات</string>
+    <string name="acceptableAbsents">غیبت های موجه:</string>
+    <string name="unacceptable">غیبت های غیر موجه:</string>
+    <string name="all">تمام غیبت ها:</string>
+    <string name="status_d">وضعیت:</string>
+    <string name="list_of_absents">لیست تمام غیبت ها:</string>
+    <string name="pass">رمز عبور</string>
+    <string name="username">نام کاربری</string>
+    <string name="confirm">تایید</string>
+    <string name="exit">خروج از حساب</string>
+    <string name="info_i">اطلاعات</string>
+    <string name="info">برنامه غیر رسمی سامانه تیک دانشجویی دانشگاه بیرجند\n\nنسخه: 1.0\n\nبرنامه نویس: ایمان احراری\n\nتلگرام و اینستاگرام: @iahrari</string>
+    <string name="okay">باشه</string>
+</resources>
