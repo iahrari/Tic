@@ -2,7 +2,6 @@ package ir.imanahrari.tic.viewmodel
 
 import android.content.Context
 import android.content.DialogInterface
-import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

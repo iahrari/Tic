@@ -1,5 +1,4 @@
 package ir.imanahrari.tic.service.model
-
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
@@ -7,7 +6,6 @@ import org.jsoup.select.Elements
 
 @Entity(tableName = "absents")
 class LessonModel {
-
     @PrimaryKey(autoGenerate = false)
     var id: Int = 0
     var allAbsents: Int = 0

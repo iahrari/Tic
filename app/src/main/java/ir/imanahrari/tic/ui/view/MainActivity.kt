@@ -12,7 +12,6 @@ import ir.imanahrari.tic.R
 import ir.imanahrari.tic.service.database.ADatabase
 import ir.imanahrari.tic.service.model.DataModel
 import ir.imanahrari.tic.service.utilities.deleteUser
-import ir.imanahrari.tic.service.utilities.isUserLogin
 import ir.imanahrari.tic.service.utilities.setRtl
 import ir.imanahrari.tic.service.utilities.startProcess
 import ir.imanahrari.tic.viewmodel.MainViewModel
@@ -52,7 +51,7 @@ class MainActivity : AppCompatActivity(){
                 AlertDialog.Builder(this)
                     .setTitle(R.string.info_i)
                     .setMessage(R.string.info)
-                    .setPositiveButton(R.string.okay){ _: DialogInterface, _: Int->}
+                    .setPositiveButton(R.string.okay){ _: DialogInterface, _: Int-> }
                     .show()
                     .isShowing
 

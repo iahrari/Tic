@@ -1,6 +1,7 @@
 package ir.imanahrari.tic.ui.view
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,14 @@ class LoginDialog(private val activity: MainActivity): DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         confirm.setOnClickListener { onClick() }
+
+        pass.setOnKeyListener { _, keyCode, event ->
+            if(event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER)
+                onClick()
+
+            true
+        }
+
         dialog!!.setTitle("ورود")
     }
 

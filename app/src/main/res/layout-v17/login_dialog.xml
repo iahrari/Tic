@@ -16,6 +16,8 @@
                 android:layout_width="@dimen/_150sdp"
                 android:layout_height="wrap_content"
                 android:id="@+id/user"
+                android:maxLines="1"
+                android:inputType="textPersonName"
                 android:hint="@string/username"/>
     </com.google.android.material.textfield.TextInputLayout>
 

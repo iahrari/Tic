@@ -1,5 +1,4 @@
 package ir.imanahrari.tic.ui.adapter
-
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -9,7 +8,8 @@ import ir.imanahrari.tic.service.model.LessonModel
 import ir.imanahrari.tic.databinding.RowLayoutBinding
 import ir.imanahrari.tic.service.model.DataModel
 
-class MainAdapter(private val dataL: DataModel): RecyclerView.Adapter<MainAdapter.ViewHolder>() {
+class MainAdapter(private val dataL: DataModel): RecyclerView.Adapter<MainAdapter.ViewHolder> () {
+
     val data = dataL.data
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.row_layout, parent, false))

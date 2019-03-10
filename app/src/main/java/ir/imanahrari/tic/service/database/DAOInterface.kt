@@ -5,7 +5,6 @@ import ir.imanahrari.tic.service.model.LessonModel
 
 @Dao
 interface DAOInterface {
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(l: LessonModel)
 
