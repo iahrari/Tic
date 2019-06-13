@@ -4,19 +4,14 @@
         xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-        <import type="java.lang.Integer"/>
         <variable name="data" type="ir.imanahrari.tic.service.model.DataModel"/>
     </data>
 
     <com.google.android.material.card.MaterialCardView
             bind:layout_width="match_parent"
             bind:layout_height="wrap_content"
-            bind:layout_marginLeft="8dp"
-            bind:layout_marginTop="8dp"
-            bind:layout_marginStart="8dp"
-            bind:layout_marginRight="8dp"
-            bind:layout_marginEnd="8dp"
-            bind:layout_marginBottom="8dp"
+            bind:layout_margin="8dp"
+            app:setOnClickD="@{data}"
             style="@style/Widget.MaterialComponents.CardView">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -80,13 +75,13 @@
                     bind:layout_height="wrap_content"
                     bind:layout_weight="1"
                     bind:src="@drawable/info"
-                    app:setOnClickD="@{data}"
                     bind:id="@+id/floatingActionButton"
                     bind:layout_gravity="end"
                     bind:background="@android:color/transparent"
                     bind:layout_marginEnd="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     bind:layout_marginRight="8dp"
+                    app:setOnClickD="@{data}"
                     bind:layout_marginTop="8dp"
                     app:layout_constraintTop_toTopOf="parent"
                     bind:layout_marginBottom="8dp"

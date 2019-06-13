@@ -1,41 +1,66 @@
 package ir.imanahrari.tic.ui.view
 
+import android.content.Context
 import android.content.DialogInterface
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AlertDialog
+
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
+import androidx.viewpager.widget.ViewPager
+
+import com.google.android.material.tabs.TabLayout
+import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import ir.imanahrari.tic.R
-import ir.imanahrari.tic.service.database.ADatabase
+import ir.imanahrari.tic.databinding.MainLayoutBinding
 import ir.imanahrari.tic.service.model.DataModel
-import ir.imanahrari.tic.service.utilities.deleteUser
-import ir.imanahrari.tic.service.utilities.setRtl
-import ir.imanahrari.tic.service.utilities.startProcess
+import ir.imanahrari.tic.service.utilities.*
+import ir.imanahrari.tic.ui.adapter.ViewPagerAdapter
 import ir.imanahrari.tic.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity(){
+
     lateinit var viewModel: MainViewModel
-    private lateinit var binding: ir.imanahrari.tic.databinding.MainLayoutBinding
+    private lateinit var binding: MainLayoutBinding
+    lateinit var absentsFragment: AbsentsListFragment
+    private lateinit var classesFragment: ExtraClassesFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setRtl()
 
-        ADatabase.getInstance(this)
-        binding = DataBindingUtil.setContentView(this, R.layout.main_layout)
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        absentsFragment = AbsentsListFragment()
+        classesFragment = ExtraClassesFragment()
 
-        setViewModelObserver()
-        startProcess()
+        startUIControllers()
+
+        setSupportActionBar(binding.mainToolbar)
+        setupTabs(binding.tabs, binding.viewPager)
+        setViewModelObservers()
+        startLoginIn()
     }
 
-    private fun setViewModelObserver(){
+    private fun startUIControllers(){
+        binding = DataBindingUtil.setContentView(this, R.layout.main_layout)
+        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+    }
+
+    private fun setViewModelObservers(){
+        viewModel.needDialog.observeForever {
+                openSimpleDialog(
+                    R.string.no_internet_title,
+                    if(it) R.string.no_internet_body else R.string.no_data_title,
+                    if(it) R.string.no_internet_button else R.string.no_data,
+                    DialogInterface.OnClickListener{_, _ -> viewModel.setContext(this)}
+                )
+        }
         viewModel.isHtmlProcessed.observeForever { binding.isHtmlProcessed = it }
-        viewModel.dataLive.observeForever { binding.data = DataModel(it, this) }
+        viewModel.dataLive.observeForever { absentsFragment.setData(DataModel(it, this)) }
         viewModel.weekLive.observeForever { binding.week = it }
+        viewModel.classDataLive.observeForever { classesFragment.setData(it) }
+        viewModel.isOnline.observeForever { binding.mainToolbar?.subtitle = if(it) "آنلاین" else "آفلاین" }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -45,17 +70,32 @@ class MainActivity : AppCompatActivity(){
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.exit -> deleteUser(this)
-
-            R.id.info ->
-                AlertDialog.Builder(this)
-                    .setTitle(R.string.info_i)
-                    .setMessage(R.string.info)
-                    .setPositiveButton(R.string.okay){ _: DialogInterface, _: Int-> }
-                    .show()
-                    .isShowing
-
+            R.id.exit -> deleteUser()
+            R.id.info -> openSimpleDialog(
+                R.string.info_i,
+                R.string.info,
+                R.string.okay,
+                DialogInterface.OnClickListener { _, _ -> }
+            )
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun setupViewPager(v: ViewPager){
+        val adapter = ViewPagerAdapter(supportFragmentManager)
+        adapter.addFragment(absentsFragment, "غیبت")
+        adapter.addFragment(classesFragment, "جبرانی")
+        v.adapter = adapter
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun setupTabs(tabLayout: TabLayout, viewPager: ViewPager){
+        setupViewPager(viewPager)
+        viewPager.rotationY = 180f
+        tabLayout.post { tabLayout.setupWithViewPager(viewPager) }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase))
     }
 }

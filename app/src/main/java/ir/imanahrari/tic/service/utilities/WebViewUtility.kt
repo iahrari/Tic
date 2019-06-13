@@ -9,6 +9,7 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
+import ir.imanahrari.tic.service.model.ClassModel
 import ir.imanahrari.tic.service.model.LessonModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -19,65 +20,85 @@ class WebViewUtility(val context: Context, private var listener: OnHtmlDataProce
     private var webView: WebView = WebView(context)
     private var timesToTry = 0
 
-    init {
-        webView.apply {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-                layoutDirection = View.LAYOUT_DIRECTION_RTL
+    private val javascriptGetHtml = "(function() { return ('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>'); })();"
+    private val baseUrl = "http://sturc.birjand.ac.ir/"
 
-            settings.javaScriptEnabled = true
+    fun destroyWebView(){
+        webView.destroy()
+    }
 
-            if (Build.VERSION.SDK_INT < 19)
-                addJavascriptInterface(this@WebViewUtility, "HTMLOUT")
+    private fun setWebViewSettings(){
+        webView.settings.javaScriptEnabled = true
+        if (Build.VERSION.SDK_INT < 19)
+            webView.addJavascriptInterface(this@WebViewUtility, "HTMLOUT")
+    }
 
-            webViewClient = object : WebViewClient() {
-                override fun onPageFinished(view: WebView?, url: String?) {
-                    super.onPageFinished(view, url)
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-                        view!!.evaluateJavascript("(function() { return ('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>'); })();") { logHtml(it) }
+    private fun setWebViewClient(){
+        webView.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView?, url: String?) {
+                super.onPageFinished(view, url)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+                    view!!.evaluateJavascript(javascriptGetHtml) { logHtml(it) }
 
-                    if (url == "http://sturc.birjand.ac.ir/") {
-                        login()
+                if (url == baseUrl) {
+                    login()
 
-                    } else if (url!!.contains("sturc.birjand.ac.ir/panel/index.php")) {
-                        getData()
-                    }
+                } else if (url!!.contains("${baseUrl}panel/index.php")) {
+                    getData()
                 }
             }
-            loadUrl("http://sturc.birjand.ac.ir/")
         }
+    }
+
+    init {
+        setWebViewSettings()
+        setWebViewClient()
+        webView.loadUrl(baseUrl)
     }
 
     @JavascriptInterface
     fun htmlProcess(html: String) = runBlocking{
         val list: MutableList<LessonModel> = ArrayList()
+        val classList: MutableList<ClassModel> = ArrayList()
         var week = ""
-
+        var isAbsent = true
         withContext(Dispatchers.Default) {
             for ((index, row) in prepareDocument(html).select("tr").withIndex()) {
                 val columns = row.select("td")
                 if (index > 2) {
-                    list.add(prepareLessonModel(columns))
+                    when {
+                        columns[0].text() == "رديف" -> isAbsent = false
+                        isAbsent -> list.add(prepareLessonModel(columns))
+                        else -> classList.add(prepareClassMode(columns))
+                    }
                 } else if(index == 1){
                     week = columns[2].text()
                 }
             }
         }
-        listener.onHtmlDataProcessed(list, week)
+        listener.onHtmlDataProcessed(list, classList, week)
     }
 
     fun logHtml(html: String){
         Log.i("html", html)
         if(html.contains("your access is denied for 24 hr"))
             Toast.makeText(context, "در ارتباط شما با سامانه تیک مشکلی به وجود آمده است لطفا در 24 ساعت آینده برای ورود تلاشش کنید.", Toast.LENGTH_LONG).show()
+        else if(html.contains("با عرض پوزش به دلیل همگام سازی با گلستان تا ساعاتی دیگر امکان دسترسی به پنل وجود ندارد")) {
+            Toast.makeText(
+                context,
+                "با عرض پوزش به دلیل همگام سازی با گلستان تا ساعاتی دیگر امکان دسترسی به پنل وجود ندارد",
+                Toast.LENGTH_LONG
+            ).show()
+            listener.onProblemsHappen()
+        }
     }
 
     fun login(){
         webView.apply {
             timesToTry++
-            if (timesToTry > 1){
-                Toast.makeText(context!!, "اطلاعات وارد شده درست نیست.", Toast.LENGTH_LONG).show()
-                return
-            }
+            if (timesToTry > 1)
+                return Toast.makeText(context!!, "اطلاعات وارد شده درست نیست.", Toast.LENGTH_LONG).show()
+
             val data =
                 "javascript:document.getElementById('user').value = '" +
                         context.getUser() +
@@ -95,15 +116,14 @@ class WebViewUtility(val context: Context, private var listener: OnHtmlDataProce
     fun getData(){
         webView.apply {
             if (Build.VERSION.SDK_INT >= 19)
-                evaluateJavascript(
-                    "(function() { return ('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>'); })();"
-                ) { htmlProcess(it) }
+                evaluateJavascript(javascriptGetHtml) { htmlProcess(it) }
             else
                 loadUrl("javascript:window.HTMLOUT.processHTML('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');")
         }
     }
 
     interface OnHtmlDataProcessed{
-        fun onHtmlDataProcessed(data: MutableList<LessonModel>, week: String)
+        fun onHtmlDataProcessed(data: MutableList<LessonModel>, classData: MutableList<ClassModel>, week: String)
+        fun onProblemsHappen()
     }
 }

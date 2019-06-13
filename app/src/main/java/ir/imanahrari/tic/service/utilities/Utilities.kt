@@ -1,6 +1,7 @@
 package ir.imanahrari.tic.service.utilities
 
 import ir.imanahrari.tic.service.database.ADatabase
+import ir.imanahrari.tic.service.model.ClassModel
 import ir.imanahrari.tic.service.model.LessonModel
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -29,10 +30,26 @@ fun prepareLessonModel(columns: Elements): LessonModel {
     return data
 }
 
+fun prepareClassMode(columns: Elements): ClassModel {
+    val id = columns[0].text().toInt() - 1
+    val name = columns[1].text()
+    val date = columns[2].text().replace(" -", "").replace(" ", "\n")
+    val teacher = columns[3].text()
+
+    return ClassModel(id, name, date, teacher)
+}
+
 fun saveToDB(data: List<LessonModel>) = runBlocking {
     withContext(Dispatchers.Default) {
         for(d in data)
             ADatabase.INSTANCE!!.getDAO().insert(d)
+    }
+}
+
+fun saveClassesToDB(data: List<ClassModel>) = runBlocking {
+    withContext(Dispatchers.Default){
+        for(d in data)
+            ADatabase.INSTANCE!!.getClassDAO().insert(d)
     }
 }
 
@@ -42,5 +59,15 @@ fun deleteExtraRowsFromDB(data: List<LessonModel>) = runBlocking {
         if(list.size > data.size)
             for (i in data.size until list.size)
                 ADatabase.INSTANCE!!.getDAO().delete(list[i])
+    }
+}
+
+
+fun deleteExtraClassRowsFromDB(data: List<ClassModel>) = runBlocking {
+    withContext(Dispatchers.Default) {
+        val list = ADatabase.INSTANCE!!.getClassDAO().getAll()
+        if(list.size > data.size)
+            for (i in data.size until list.size)
+                ADatabase.INSTANCE!!.getClassDAO().delete(list[i])
     }
 }

@@ -14,6 +14,16 @@
     <string name="confirm">تایید</string>
     <string name="exit">خروج از حساب</string>
     <string name="info_i">اطلاعات</string>
-    <string name="info">برنامه غیر رسمی سامانه تیک دانشجویی دانشگاه بیرجند\n\nنسخه: 1.0\n\nبرنامه نویس: ایمان احراری\n\nتلگرام و اینستاگرام: @iahrari</string>
+    <string name="info">برنامه غیر رسمی سامانه تیک دانشجویی دانشگاه بیرجند\n\nنسخه: 1.0\n\nبرنامه نویس: ایمان
+        احراری\n\nتلگرام و اینستاگرام: @iahrari
+    </string>
+    <string name="no_internet_title">اینترنت موجود نیست!</string>
+    <string name="no_internet_body">لطفا برای دریافت اطلاعات به اینترنت متصل شوید.</string>
+    <string name="no_internet_button">متصل شد</string>
     <string name="okay">باشه</string>
+    <string name="allowedAbsents">غیبت های مجاز</string>
+    <string name="no_data_title">داده ای در دسترس نیست</string>
+    <string name="no_data">متاسفانه داده ای برای نمایش دادن وجود ندارد.</string>
+    <string name="teacher">استاد</string>
+    <string name="date">تاریخ</string>
 </resources>
