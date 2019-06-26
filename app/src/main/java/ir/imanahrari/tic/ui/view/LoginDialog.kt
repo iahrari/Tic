@@ -5,41 +5,46 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import ir.imanahrari.tic.R
 import ir.imanahrari.tic.service.utilities.setUser
-import kotlinx.android.synthetic.main.login_dialog.*
 
-class LoginDialog(private val activity: MainActivity): DialogFragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.login_dialog, container)
+class LoginDialog: DialogFragment() {
+
+    lateinit var binding: ir.imanahrari.tic.databinding.LoginDialogBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(STYLE_NO_TITLE, R.style.AppTheme)
+        isCancelable = false
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        confirm.setOnClickListener { onClick() }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        pass.setOnKeyListener { _, keyCode, event ->
+        binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.login_dialog, container, false)
+        binding.confirm.setOnClickListener { onClick() }
+        binding.exit.setOnClickListener { activity!!.onBackPressed() }
+        binding.pass.setOnKeyListener { _, keyCode, event ->
             if(event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER)
                 onClick()
-
             true
         }
 
-        dialog!!.setTitle("ورود")
+        return binding.root
     }
 
     private fun onClick(){
         when {
-            user.text.toString() == "" -> user.error = "این فیلد نمی تواند خالی باشد!"
-            pass.text.toString() == "" -> pass.error = "این فیلد نمی تواند خالی باشد!"
+            binding.user.text.toString() == "" -> binding.user.error = "این فیلد نمی تواند خالی باشد!"
+            binding.pass.text.toString() == "" -> binding.pass.error = "این فیلد نمی تواند خالی باشد!"
             else -> login()
         }
     }
 
     private fun login(){
-        activity.setUser(user.text.toString(), pass.text.toString())
-        activity.viewModel.setContext(context!!)
+        (activity as MainActivity).setUser(binding.user.text.toString(), binding.pass.text.toString())
+        (activity as MainActivity).viewModel.setContext(context!!)
         dismiss()
     }
 }

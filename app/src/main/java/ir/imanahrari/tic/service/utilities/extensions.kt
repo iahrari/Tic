@@ -110,5 +110,5 @@ fun Context.openDatabase(){
 }
 
 fun MainActivity.signUpUser(){
-    LoginDialog(this).show(supportFragmentManager, "login")
+    LoginDialog().show(supportFragmentManager, "login")
 }

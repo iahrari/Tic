@@ -1,44 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layoutDirection="rtl"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              tools:context="ir.imanahrari.tic.ui.view.LoginDialog">
 
-    <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="@dimen/_150sdp"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.constraintlayout.widget.ConstraintLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layoutDirection="rtl"
+            android:background="@color/colorPrimaryDark"
+            tools:context="ir.imanahrari.tic.ui.view.LoginDialog"
+            android:layout_height="match_parent">
 
-        <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="@dimen/_150sdp"
+        <com.google.android.material.card.MaterialCardView
+                android:layout_width="wrap_content"
+                app:cardCornerRadius="20dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/user"
-                android:maxLines="1"
-                android:inputType="textPersonName"
-                android:hint="@string/username"/>
-    </com.google.android.material.textfield.TextInputLayout>
+                app:cardBackgroundColor="@color/colorPrimary"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:padding="8dp">
 
-    <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="@dimen/_150sdp"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp">
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-        <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="@dimen/_150sdp"
-                android:layout_height="wrap_content"
-                android:id="@+id/pass"
-                android:hint="@string/pass"
-                android:inputType="textPassword"/>
-    </com.google.android.material.textfield.TextInputLayout>
+                <androidx.appcompat.widget.Toolbar
+                        android:layout_width="match_parent"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_marginTop="0dp"
+                        app:titleTextColor="#fff"
+                        app:titleMarginTop="0dp"
+                        app:titleMarginStart="@dimen/_94sdp"
+                        app:titleMarginEnd="@dimen/_50sdp"
+                        android:layout_height="wrap_content"
+                        app:title="@string/enter"/>
 
-    <androidx.appcompat.widget.AppCompatButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/confirm"
-            android:id="@+id/confirm"
-            android:layout_margin="8dp"/>
-</LinearLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="@dimen/_200sdp"
+                        android:layout_height="wrap_content"
+                        android:textColorHint="#fff"
+                        android:layout_margin="8dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="@dimen/_200sdp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/user"
+                            android:maxLines="1"
+                            android:inputType="textPersonName"
+                            android:hint="@string/username"
+                            android:textColorHint="#fff"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="@dimen/_200sdp"
+                        android:layout_height="wrap_content"
+                        android:textColorHint="#fff"
+                        android:layout_margin="8dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="@dimen/_200sdp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/pass"
+                            android:hint="@string/pass"
+                            android:textColorHint="#fff"
+                            android:inputType="textPassword"/>
+                </com.google.android.material.textfield.TextInputLayout>
+                <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center">
+                <com.google.android.material.button.MaterialButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/confirm"
+                        android:id="@+id/confirm"
+                        android:layout_margin="8dp"/>
+
+                <com.google.android.material.button.MaterialButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_margin="8dp"
+                        android:id="@+id/exit"
+                        android:text="@string/exit_s"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

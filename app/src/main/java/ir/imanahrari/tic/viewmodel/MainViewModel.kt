@@ -12,6 +12,10 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 class MainViewModel: ViewModel(), WebViewUtility.OnHtmlDataProcessed{
+    override fun onLogInFailed() {
+        isLogInFailed.postValue(true)
+    }
+
     override fun onProblemsHappen() {
         offlineMode()
         webView.destroyWebView()
@@ -22,7 +26,7 @@ class MainViewModel: ViewModel(), WebViewUtility.OnHtmlDataProcessed{
     val isHtmlProcessed: MutableLiveData<Boolean> = MutableLiveData()
     val classDataLive: MutableLiveData<List<ClassModel>> = MutableLiveData()
     val isOnline: MutableLiveData<Boolean> = MutableLiveData()
-
+    val isLogInFailed: MutableLiveData<Boolean> = MutableLiveData()
     private lateinit var webView: WebViewUtility
 
     val weekLive: MutableLiveData<String> = MutableLiveData()

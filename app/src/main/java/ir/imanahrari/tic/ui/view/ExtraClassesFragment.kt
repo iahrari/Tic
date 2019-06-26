@@ -15,7 +15,6 @@ import ir.imanahrari.tic.service.model.LessonModel
 
 class ExtraClassesFragment : Fragment() {
     lateinit var binding: FragmentExtraClassesBinding
-//    private var data: List<ClassModel>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

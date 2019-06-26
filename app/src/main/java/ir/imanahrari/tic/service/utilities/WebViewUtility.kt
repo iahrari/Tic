@@ -97,7 +97,7 @@ class WebViewUtility(val context: Context, private var listener: OnHtmlDataProce
         webView.apply {
             timesToTry++
             if (timesToTry > 1)
-                return Toast.makeText(context!!, "اطلاعات وارد شده درست نیست.", Toast.LENGTH_LONG).show()
+                return listener.onLogInFailed()
 
             val data =
                 "javascript:document.getElementById('user').value = '" +
@@ -125,5 +125,6 @@ class WebViewUtility(val context: Context, private var listener: OnHtmlDataProce
     interface OnHtmlDataProcessed{
         fun onHtmlDataProcessed(data: MutableList<LessonModel>, classData: MutableList<ClassModel>, week: String)
         fun onProblemsHappen()
+        fun onLogInFailed()
     }
 }

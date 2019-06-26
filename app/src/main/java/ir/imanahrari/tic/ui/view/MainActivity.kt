@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -23,7 +24,7 @@ import ir.imanahrari.tic.viewmodel.MainViewModel
 class MainActivity : AppCompatActivity(){
 
     lateinit var viewModel: MainViewModel
-    private lateinit var binding: MainLayoutBinding
+    lateinit var binding: MainLayoutBinding
     lateinit var absentsFragment: AbsentsListFragment
     private lateinit var classesFragment: ExtraClassesFragment
 
@@ -50,9 +51,9 @@ class MainActivity : AppCompatActivity(){
     private fun setViewModelObservers(){
         viewModel.needDialog.observeForever {
                 openSimpleDialog(
-                    R.string.no_internet_title,
-                    if(it) R.string.no_internet_body else R.string.no_data_title,
-                    if(it) R.string.no_internet_button else R.string.no_data,
+                    if(it) R.string.no_internet_title  else R.string.no_data_title,
+                    if(it) R.string.no_internet_body  else R.string.no_data,
+                    R.string.okay,
                     DialogInterface.OnClickListener{_, _ -> viewModel.setContext(this)}
                 )
         }
@@ -60,7 +61,8 @@ class MainActivity : AppCompatActivity(){
         viewModel.dataLive.observeForever { absentsFragment.setData(DataModel(it, this)) }
         viewModel.weekLive.observeForever { binding.week = it }
         viewModel.classDataLive.observeForever { classesFragment.setData(it) }
-        viewModel.isOnline.observeForever { binding.mainToolbar?.subtitle = if(it) "آنلاین" else "آفلاین" }
+        viewModel.isOnline.observeForever { binding.mainToolbar.subtitle = if(it) "آنلاین" else "آفلاین" }
+        viewModel.isLogInFailed.observeForever { if (it) onLogInFailed() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -97,5 +99,10 @@ class MainActivity : AppCompatActivity(){
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase))
+    }
+
+    private fun onLogInFailed(){
+        Toast.makeText(this, "اطلاعات وارد شده درست نیست.", Toast.LENGTH_LONG).show()
+        deleteUser()
     }
 }
